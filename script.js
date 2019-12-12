@@ -49,17 +49,6 @@ function fatturato_by_agent(type, label, data) {
           borderWidth: 1
         }
       ]
-    },
-    options: {
-      scales: {
-        yAxes: [
-          {
-            ticks: {
-              beginAtZero: true
-            }
-          }
-        ]
-      }
     }
   });
 }
