@@ -27,6 +27,13 @@
 <body>
     <div class="container-fluid pad">
         <div id='box' class="row justify-content-center">
+            <div class="col d-flex justify-content-end">
+                <input type="text" id="access">
+                <button id="cerca">cerca</button>
+            </div>
+            
+        </div>
+        <div id='box' class="row justify-content-center">
             <div class="col-10">
                 <canvas id="fatturato">
                 </canvas>
@@ -56,12 +63,6 @@
 
 
 
-    <!-- template -->
-    <script id="template" type="text/x-handlebars-template">
 
-      <div class="col-4 match">
-          <p>{{team_1}} - {{punteggio_team_1}} </p>
-          <p>{{team_2}} - {{punteggio_team_2}} </p>
-      </div>
 </body>
 </html>
