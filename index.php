@@ -43,6 +43,15 @@
             
         </div>
         
+        <div id='box' class="row justify-content-center">
+            <div class="col-10">
+                <canvas id="team_efficiency">
+                </canvas>
+            
+            </div>
+            
+        </div>
+        
     </div>
 
 

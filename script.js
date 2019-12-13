@@ -1,80 +1,142 @@
-function printChartJsFatturato(data) {
-  var ctx = document.getElementById("fatturato").getContext("2d");
-  new Chart(ctx, {
-    type: "line",
-    data: {
-      labels: moment.months(),
-      datasets: [
-        {
-          label: "vendite",
-          data: data
-        }
-      ]
-    },
-    options: {
-      scales: {
-        yAxes: [
-          {
-            ticks: {
-              beginAtZero: true
-            }
-          }
-        ]
-      }
-    }
-  });
-}
-function fatturato_by_agent(type, label, data) {
-  var ctx = document.getElementById("fatturato_by_agent").getContext("2d");
+// function printChartJsFatturato(data) {
+// var ctx = document.getElementById(id).getContext("2d");
+//   var ctx = $("#fatturato");
+//   new Chart(ctx, {
+//     type: "line",
+//     data: {
+//       labels: moment.months(),
+//       datasets: [
+//         {
+//           label: "vendite",
+//           data: data
+//         }
+//       ]
+//     },
+//     options: {
+//       scales: {
+//         yAxes: [
+//           {
+//             ticks: {
+//               beginAtZero: true
+//             }
+//           }
+//         ]
+//       }
+//     }
+//   });
+// }
+function printGraphs(id, type, labels, label, data, bgColor, borderColor) {
+  var ctx = document.getElementById(id).getContext("2d");
   new Chart(ctx, {
     type: type,
     data: {
-      labels: label,
+      labels: labels,
       datasets: [
         {
-          label: "Agents",
+          label: label,
           data: data,
-          backgroundColor: [
-            "rgba(255, 99, 132, 0.2)",
-            "rgba(54, 162, 235, 0.2)",
-            "rgba(255, 206, 86, 0.2)",
-            "rgba(75, 32, 192, 0.2)"
-          ],
-          borderColor: [
-            "rgba(255, 99, 132, 1)",
-            "rgba(54, 162, 235, 1)",
-            "rgba(255, 206, 86, 1)",
-            "rgba(75, 192, 192, 1)"
-          ],
+          backgroundColor: bgColor,
+          borderColor: borderColor,
           borderWidth: 1
         }
       ]
     }
   });
 }
-
-function getData() {
-  $.ajax({
-    url: "getLineData.php",
-    method: "GET",
-    success: function(data) {
-      printChartJsFatturato(data);
-    },
-    error: function(error) {
-      console.log("error", error);
+function printline(
+  id,
+  type,
+  labels,
+  data1,
+  data2,
+  data3,
+  bgColor,
+  borderColor1,
+  borderColor2,
+  borderColor3
+) {
+  var ctx = document.getElementById(id).getContext("2d");
+  new Chart(ctx, {
+    type: type,
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: "Team1",
+          data: data1,
+          backgroundColor: bgColor,
+          borderColor: borderColor1,
+          borderWidth: 1
+        },
+        {
+          label: "Team2",
+          data: data2,
+          backgroundColor: bgColor,
+          borderColor: borderColor2,
+          borderWidth: 1
+        },
+        {
+          label: "Team3",
+          data: data3,
+          backgroundColor: bgColor,
+          borderColor: borderColor3,
+          borderWidth: 1
+        }
+      ]
     }
   });
+}
+// function getData() {
+//   $.ajax({
+//     url: "getLineData.php",
+//     method: "GET",
+//     success: function(data) {
+//       printChartJsFatturato(data);
+//     },
+//     error: function(error) {
+//       console.log("error", error);
+//     }
+//   });
+// }
+function printCheck(data) {
+  printGraphs(
+    "fatturato",
+    data["fatturato"]["type"],
+    moment.months(),
+    "vendita",
+    Object.values(data["fatturato"]["data"]),
+    "green",
+    "red"
+  );
+  printGraphs(
+    "fatturato_by_agent",
+    data["fatturato_by_agent"]["type"],
+    Object.keys(data["fatturato_by_agent"]["data"]),
+    "",
+    Object.values(data["fatturato_by_agent"]["data"]),
+    "yellow",
+    "red"
+  );
+  printline(
+    "team_efficiency",
+    data["team_efficiency"]["type"],
+    moment.months(),
+    Object.values(data["team_efficiency"]["data"]["Team1"]),
+    Object.values(data["team_efficiency"]["data"]["Team2"]),
+    Object.values(data["team_efficiency"]["data"]["Team3"]),
+    "",
+    "blue",
+    "green",
+    "orange"
+  );
 }
 function getData2() {
   $.ajax({
     url: "getGraphsData.php",
     method: "GET",
     success: function(data) {
-      fatturato_by_agent(
-        data["fatturato_by_agent"]["type"],
-        Object.keys(data["fatturato_by_agent"]["data"]),
-        Object.values(data["fatturato_by_agent"]["data"])
-      );
+      printCheck(data);
+      console.log(Object.values(data["team_efficiency"]["data"]));
     },
     error: function(error) {
       console.log("error", error);
@@ -83,7 +145,7 @@ function getData2() {
 }
 
 function init() {
-  getData();
+  // getData();
   getData2(); //lo so che potevo fare soltanto un getdata richiamando l'altra funzione dentro success ma volevo far vedere l'altro passaggio
 }
 
