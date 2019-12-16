@@ -98,87 +98,57 @@ function printline(
 //     }
 //   });
 // }
-// function printCheck(data) {
-//   printGraphs(
-//     "fatturato",
-//     data["fatturato"]["type"],
-//     moment.months(),
-//     "vendita",
-//     Object.values(data["fatturato"]["data"]),
-//     "green",
-//     "red"
-//   );
-//   printGraphs(
-//     "fatturato_by_agent",
-//     data["fatturato_by_agent"]["type"],
-//     Object.keys(data["fatturato_by_agent"]["data"]),
-//     "",
-//     Object.values(data["fatturato_by_agent"]["data"]),
-//     "yellow",
-//     "red"
-//   );
-//   printline(
-//     "team_efficiency",
-//     data["team_efficiency"]["type"],
-//     moment.months(),
-//     Object.values(data["team_efficiency"]["data"]["Team1"]),
-//     Object.values(data["team_efficiency"]["data"]["Team2"]),
-//     Object.values(data["team_efficiency"]["data"]["Team3"]),
-//     "",
-//     "blue",
-//     "green",
-//     "orange"
-//   );
-// }
-function print(data) {
-  // $("canvas").css("");
-  if (data[0]["access"] === "guest") {
+function printCheck(data) {
+  if (data["fatturato"]) {
     printGraphs(
       "fatturato",
-      data[0]["type"],
+      data["fatturato"]["type"],
       moment.months(),
       "vendita",
-      Object.values(data[0]["data"]),
+      Object.values(data["fatturato"]["data"]),
       "green",
       "red"
     );
-    if (data[1]["access"] === "employee") {
-      printGraphs(
-        "fatturato_by_agent",
-        data[1]["type"],
-        Object.keys(data[1]["data"]),
-        "",
-        Object.values(data[1]["data"]),
-        "yellow",
-        "red"
-      );
-      if (data[2]["access"] === "clevel") {
-        printline(
-          "team_efficiency",
-          data[2]["type"],
-          moment.months(),
-          Object.values(data[2]["data"]["Team1"]),
-          Object.values(data[2]["data"]["Team2"]),
-          Object.values(data[2]["data"]["Team3"]),
-          "",
-          "blue",
-          "green",
-          "orange"
-        );
-      } //end clevel condition
-    } //end employee condtion
-  } //end guest condition
-} //end print function
-function getData2(elem) {
+  }
+  if (data["fatturato_by_agent"]) {
+    printGraphs(
+      "fatturato_by_agent",
+      data["fatturato_by_agent"]["type"],
+      Object.keys(data["fatturato_by_agent"]["data"]),
+      "",
+      Object.values(data["fatturato_by_agent"]["data"]),
+      "yellow",
+      "red"
+    );
+  }
+  if (data["team_efficiency"]) {
+    printline(
+      "team_efficiency",
+      data["team_efficiency"]["type"],
+      moment.months(),
+      Object.values(data["team_efficiency"]["data"]["Team1"]),
+      Object.values(data["team_efficiency"]["data"]["Team2"]),
+      Object.values(data["team_efficiency"]["data"]["Team3"]),
+      "",
+      "blue",
+      "green",
+      "orange"
+    );
+  }
+}
+// function print(data) {} //end print function
+function getData2(access) {
   $.ajax({
     url: "getGraphsData.php",
     data: {
-      access: elem
+      access: access
     },
     method: "GET",
     success: function(data) {
-      print(data);
-      console.log(data);
+      printCheck(data);
+      // console.log(window.location.href);
+
+      console.log(data, access);
     },
     error: function(error) {
       console.log("error", error);
@@ -188,11 +158,34 @@ function getData2(elem) {
 function cercaBtnClick() {
   var input = $("#access").val();
   console.log(input);
-  getData2(input);
+  getData();
   $("#access").val("");
 }
+function getLevelParameter() {
+  var urlParams = new URLSearchParams(window.location.search);
+  var levelParam = urlParams.get("level");
+
+  return levelParam;
+}
+function getData() {
+  var level = getLevelParameter();
+  $.ajax({
+    url: "getGraphsData.php",
+    method: "GET",
+    data: {
+      level: level
+    },
+    success: function(data) {
+      printCheck(data);
+      console.log(data);
+    },
+    error: function(error) {
+      console.log("error", error);
+    }
+  });
+}
 function init() {
-  // getData();
+  getData();
   // getData2(); //lo so che potevo fare soltanto un getdata richiamando l'altra funzione dentro success ma volevo far vedere l'altro passaggio
   $("#cerca").on("click", cercaBtnClick);
 }

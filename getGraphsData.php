@@ -1,24 +1,25 @@
 <?php 
     header('Content-Type: application/json');   
     include 'data2.php';
-    $access = $_GET['access'];
-    $res = [];
-    foreach ($graphs as $key => $elems) {
-        if ($elems['access']==$access && $elems['access'] =='clevel') {
-            $res[]=$graphs['fatturato'];
-            $res[]=$graphs['fatturato_by_agent'];
-            $res[]=$graphs['team_efficiency'];
-        }
-        if ($elems['access']==$access && $elems['access'] =='employee') {
-            $res[]=$graphs['fatturato'];
-            $res[]=$graphs['fatturato_by_agent'];
-        }
-        if ($elems['access']==$access && $elems['access'] =='guest') {
-            $res[]=$graphs['fatturato'];
-        }
-        // if ($elems['access']==$access && $elems['access'] =='clevel') {
-        //     $res[]=$elems;
-        // }
-
+    $level = $_GET['level'];
+    $resGraphs = [];
+  
+    foreach ($graphs as $name => $graph) {
+  
+      $gLevel = $graph['access'];
+  
+      if ($gLevel == 'guest') {
+  
+        $resGraphs[$name] = $graph;
+      }
+      if ($gLevel == 'clevel' && $level == 'clevel') {
+  
+        $resGraphs[$name] = $graph;
+      }
+      if ($gLevel == 'employee'
+          && ($level == 'employee' || $level == 'clevel')) {
+  
+          $resGraphs[$name] = $graph;
+      }
     }
-    echo json_encode($res);
+    echo json_encode($resGraphs);
